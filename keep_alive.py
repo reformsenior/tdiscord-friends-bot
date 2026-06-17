@@ -1,5 +1,6 @@
 """Web server mínimo para o UptimeRobot pingar e manter o bot ativo."""
 
+import os
 from threading import Thread
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
@@ -15,7 +16,8 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def keep_alive() -> None:
-    server = HTTPServer(("0.0.0.0", 8080), Handler)
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(("0.0.0.0", port), Handler)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
-    print("🌐 Servidor web ativo na porta 8080 (UptimeRobot)")
+    print(f"🌐 Servidor web ativo na porta {port} (UptimeRobot)")
